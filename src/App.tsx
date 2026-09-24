@@ -37,8 +37,8 @@ type WeatherData = {
   forecastList: ForecastItem[]; // 今後の予報リスト
 };
 
-// ★ 環境変数からAPIキーを読み込む
-const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
+// 環境変数からAPIキーを取得するように変更
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 // 表示したい2つの特定地点（緯度・経度でピンポイント指定）
 const TARGET_LOCATIONS = [
