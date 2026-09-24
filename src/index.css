@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+/* 画面全体の余白を消して、背景を全画面に広げる */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+}

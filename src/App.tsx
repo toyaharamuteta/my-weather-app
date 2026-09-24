@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import bgImage from './assets/background.jpg';
 
 // 予報1コマ分の型定義
 type ForecastItem = {
@@ -37,7 +38,7 @@ type WeatherData = {
   forecastList: ForecastItem[]; // 今後の予報リスト
 };
 
-// 環境変数からAPIキーを取得するように変更
+// 環境変数からAPIキーを取得
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 // 表示したい2つの特定地点（緯度・経度でピンポイント指定）
@@ -62,7 +63,6 @@ export default function App() {
     setError('');
     try {
       const promises = TARGET_LOCATIONS.map(async (loc) => {
-        // 現在の天気API と 予報API を同時に呼び出す
         const [currentRes, forecastRes] = await Promise.all([
           fetch(
             `https://api.openweathermap.org/data/2.5/weather?lat=${loc.lat}&lon=${loc.lon}&units=metric&lang=ja&appid=${API_KEY}`
@@ -83,7 +83,6 @@ export default function App() {
           ...currentData,
           id: loc.id,
           displayName: loc.name,
-          // 直近24時間分（3時間ごとのデータ × 8コマ）を抽出
           forecastList: forecastData.list.slice(0, 8),
         };
       });
@@ -104,32 +103,36 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-6">
+    /* ★ w-full と min-h-screen で画面全体に背景画像を広げる設定 */
+    <div 
+      className="w-full min-h-screen bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center p-6"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
       <div className="w-full max-w-2xl">
         
         {/* ヘッダー */}
         <header className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold text-slate-800 tracking-wide mb-2">
-          舘村勇人専用のweather news
+          <h1 className="text-3xl font-extrabold text-white drop-shadow-md tracking-wide mb-2">
+            舘村勇人専用のweather news
           </h1>
         </header>
 
         {/* エラー表示 */}
         {error && (
-          <div className="bg-red-50 text-red-600 p-4 rounded-xl text-center mb-6 border border-red-100">
+          <div className="bg-red-50/90 backdrop-blur-md text-red-600 p-4 rounded-xl text-center mb-6 border border-red-100 shadow-lg">
             {error}
           </div>
         )}
 
         {/* ローディング表示 */}
         {loading ? (
-          <div className="text-center py-12">
+          <div className="text-center py-12 bg-white/80 backdrop-blur-md rounded-2xl shadow-xl">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent mb-4"></div>
-            <p className="text-slate-500">天気を取得中...</p>
+            <p className="text-slate-600 font-bold">天気を取得中...</p>
           </div>
         ) : selectedWeather ? (
           /* ----------------- 2. 地点の詳細 & 予報画面 ----------------- */
-          <div className="bg-white rounded-2xl shadow-lg p-6 border border-blue-100">
+          <div className="bg-white/85 backdrop-blur-md rounded-2xl shadow-2xl p-6 border border-white/50">
             <button
               onClick={() => setSelectedWeather(null)}
               className="mb-6 text-blue-600 font-bold hover:underline flex items-center gap-1 cursor-pointer"
@@ -140,7 +143,7 @@ export default function App() {
             {/* 現在の天気サマリー */}
             <div className="text-center">
               <h2 className="text-3xl font-bold text-slate-800 mb-1">{selectedWeather.displayName}</h2>
-              <p className="text-slate-500 capitalize">{selectedWeather.weather[0].description}</p>
+              <p className="text-slate-600 capitalize font-medium">{selectedWeather.weather[0].description}</p>
 
               <div className="flex items-center justify-center my-2">
                 <img
@@ -155,33 +158,33 @@ export default function App() {
 
               {/* 現在の詳細データ */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 my-6">
-                <div className="bg-slate-50 p-3 rounded-xl text-center">
-                  <p className="text-xs text-slate-400 font-bold">体感温度</p>
-                  <p className="text-lg font-bold text-slate-700 mt-0.5">
+                <div className="bg-white/60 p-3 rounded-xl text-center shadow-sm">
+                  <p className="text-xs text-slate-500 font-bold">体感温度</p>
+                  <p className="text-lg font-bold text-slate-800 mt-0.5">
                     {Math.round(selectedWeather.main.feels_like)}°C
                   </p>
                 </div>
-                <div className="bg-slate-50 p-3 rounded-xl text-center">
-                  <p className="text-xs text-slate-400 font-bold">最高 / 最低</p>
-                  <p className="text-lg font-bold text-slate-700 mt-0.5">
+                <div className="bg-white/60 p-3 rounded-xl text-center shadow-sm">
+                  <p className="text-xs text-slate-500 font-bold">最高 / 最低</p>
+                  <p className="text-lg font-bold text-slate-800 mt-0.5">
                     {Math.round(selectedWeather.main.temp_max)}° / {Math.round(selectedWeather.main.temp_min)}°
                   </p>
                 </div>
-                <div className="bg-slate-50 p-3 rounded-xl text-center">
-                  <p className="text-xs text-slate-400 font-bold">湿度</p>
-                  <p className="text-lg font-bold text-slate-700 mt-0.5">
+                <div className="bg-white/60 p-3 rounded-xl text-center shadow-sm">
+                  <p className="text-xs text-slate-500 font-bold">湿度</p>
+                  <p className="text-lg font-bold text-slate-800 mt-0.5">
                     {selectedWeather.main.humidity}%
                   </p>
                 </div>
-                <div className="bg-slate-50 p-3 rounded-xl text-center">
-                  <p className="text-xs text-slate-400 font-bold">風速</p>
-                  <p className="text-lg font-bold text-slate-700 mt-0.5">
+                <div className="bg-white/60 p-3 rounded-xl text-center shadow-sm">
+                  <p className="text-xs text-slate-500 font-bold">風速</p>
+                  <p className="text-lg font-bold text-slate-800 mt-0.5">
                     {selectedWeather.wind.speed} m/s
                   </p>
                 </div>
               </div>
 
-              {/* ★ 新機能：3時間ごとの天気予報（今後24時間分） */}
+              {/* 3時間ごとの天気予報 */}
               <div className="mt-8 text-left">
                 <h3 className="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
                   <span>⏱</span> 3時間ごとの天気予報（今後24時間）
@@ -191,9 +194,9 @@ export default function App() {
                   {selectedWeather.forecastList.map((item, index) => (
                     <div
                       key={index}
-                      className="flex-shrink-0 bg-blue-50 border border-blue-100 p-3 rounded-xl text-center min-w-[90px]"
+                      className="flex-shrink-0 bg-white/70 border border-white/60 p-3 rounded-xl text-center min-w-[90px] shadow-sm"
                     >
-                      <p className="text-xs font-bold text-slate-500">
+                      <p className="text-xs font-bold text-slate-600">
                         {formatTime(item.dt)}
                       </p>
                       <img
@@ -221,12 +224,12 @@ export default function App() {
               <div
                 key={data.id}
                 onClick={() => setSelectedWeather(data)}
-                className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 cursor-pointer border border-slate-100 group"
+                className="bg-white/85 backdrop-blur-md p-6 rounded-2xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-1 cursor-pointer border border-white/60 group"
               >
                 <div className="flex justify-between items-start mb-2">
                   <div>
                     <h3 className="text-xl font-bold text-slate-800">{data.displayName}</h3>
-                    <p className="text-xs text-slate-400 capitalize mt-1">
+                    <p className="text-xs text-slate-500 capitalize mt-1 font-medium">
                       {data.weather[0].description}
                     </p>
                   </div>
@@ -241,7 +244,7 @@ export default function App() {
                   <p className="text-4xl font-black text-slate-800">
                     {Math.round(data.main.temp)}°C
                   </p>
-                  <p className="text-xs text-blue-500 font-semibold group-hover:underline">
+                  <p className="text-xs text-blue-600 font-bold group-hover:underline">
                     詳細 ➔
                   </p>
                 </div>
@@ -250,28 +253,6 @@ export default function App() {
           </div>
         )}
 
-      </div>
-    </div>
-  );
-}
-export default function App() {
-  // ...既存の処理...
-
-  return (
-    // ★ style で背景画像を適用し、Tailwindで中央寄せ＆カバー表示
-    <div 
-      className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center p-4"
-      style={{ backgroundImage: "background.jpg" }}
-    >
-      {/* 
-        ★ 背景写真の上に置くカード 
-        bg-white/80（白の半透明）や backdrop-blur-md（すりガラス効果）をつけると文字が見やすくなります 
-      */}
-      <div className="bg-white/85 backdrop-blur-md p-6 rounded-2xl shadow-xl max-w-md w-full">
-        {/* ここに天気情報などのコンテンツ */}
-        <h1 className="text-2xl font-bold text-slate-800 mb-4">Weather News</h1>
-        
-        {/* 天気データの表示部分... */}
       </div>
     </div>
   );
