@@ -254,3 +254,25 @@ export default function App() {
     </div>
   );
 }
+export default function App() {
+  // ...既存の処理...
+
+  return (
+    // ★ style で背景画像を適用し、Tailwindで中央寄せ＆カバー表示
+    <div 
+      className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center p-4"
+      style={{ backgroundImage: "background.HEIC" }}
+    >
+      {/* 
+        ★ 背景写真の上に置くカード 
+        bg-white/80（白の半透明）や backdrop-blur-md（すりガラス効果）をつけると文字が見やすくなります 
+      */}
+      <div className="bg-white/85 backdrop-blur-md p-6 rounded-2xl shadow-xl max-w-md w-full">
+        {/* ここに天気情報などのコンテンツ */}
+        <h1 className="text-2xl font-bold text-slate-800 mb-4">Weather News</h1>
+        
+        {/* 天気データの表示部分... */}
+      </div>
+    </div>
+  );
+}
