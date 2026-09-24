@@ -261,7 +261,7 @@ export default function App() {
     // ★ style で背景画像を適用し、Tailwindで中央寄せ＆カバー表示
     <div 
       className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center p-4"
-      style={{ backgroundImage: "background.HEIC" }}
+      style={{ backgroundImage: "background.jpg" }}
     >
       {/* 
         ★ 背景写真の上に置くカード 
