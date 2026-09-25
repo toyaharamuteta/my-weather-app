@@ -227,7 +227,7 @@ export default function App() {
                   <div className="h-96 w-full rounded-2xl overflow-hidden shadow-inner border border-slate-200">
                     <MapContainer
                       center={[selectedWeather.lat, selectedWeather.lon]}
-                      zoom={10}
+                      zoom={11}
                       scrollWheelZoom={true}
                       style={{ height: '100%', width: '100%' }}
                     >
@@ -239,7 +239,7 @@ export default function App() {
                       {/* ★ OpenWeatherMapの雨雲（降水）レイヤー */}
                       <TileLayer
                         url={`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${API_KEY}`}
-                        opacity={0.7}
+                        opacity={1.0}
                       />
                       {/* 選択中の拠点マーカー */}
                       <Marker position={[selectedWeather.lat, selectedWeather.lon]}>
