@@ -323,3 +323,7 @@ export default function App() {
     </div>
   );
 }
+// フッターなどにちょこっと書いておくと丁寧です
+<footer className="text-center text-xs text-slate-400 mt-8">
+  Data provided by OpenWeatherMap
+</footer>
