@@ -166,7 +166,7 @@ export default function App() {
         <div className="flex-grow">
           {/* ヘッダー */}
           <header className="text-center mb-8">
-            <h1 className="text-3xl font-extrabold text-white drop-shadow-md tracking-wide">
+            <h1 className="text-5xl font-extrabold text-white drop-shadow-md tracking-wide">
               🌤 自分だけのウェザーニュース🐶
             </h1>
             <p className="text-white/90 text-sm mt-1 drop-shadow-sm">自宅周辺 & 京大周辺</p>
