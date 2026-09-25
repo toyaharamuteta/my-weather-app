@@ -1,47 +1,47 @@
-import { useState, useEffect } from 'react';
-import bgImage from './assets/background.jpg'; // ★背景画像の読み込み
+import { useState, useEffect } from 'react'; 
+import bgImage from './assets/background.jpg'; // 背景画像の読み込み
 
 // 3時間ごとの予報型
 type HourlyForecast = {
-  dt: number;
-  timeStr: string;
-  temp: number;
-  icon: string;
-  pop: number; // 降水確率
+  dt: number; // コンピューター用の日時は数値1/1/1970～
+  timeStr: string; // 時間は文字列
+  temp: number; // 気温は数値
+  icon: string; // アイコンは文字列
+  pop: number; // 降水確率は数値
 };
 
 // 5日間の日別予報型
 type DailyForecast = {
-  date: string;
-  tempMax: number;
-  tempMin: number;
-  description: string;
-  icon: string;
+  date: string; // 日付は文字列
+  tempMax: number; // 最高気温は数値
+  tempMin: number; // 最低気温は数値
+  description: string; // 天気状態は文字列
+  icon: string; // アイコンは文字列
 };
 
 // 1つの都市が保持する全天気データ
-type WeatherData = {
-  id: string;
-  displayName: string;
-  currentTemp: number;
-  feelsLike: number;
-  tempMax: number;
-  tempMin: number;
-  humidity: number;
-  windSpeed: number;
-  description: string;
-  icon: string;
-  hourlyList: HourlyForecast[];
-  dailyList: DailyForecast[];
+type WeatherData = {   //weatherdataの定義
+  id: string;  // 都市を識別するための固有IDは文字列
+  displayName: string;  // 画面表示する都市の名前は文字列
+  currentTemp: number;  // 現在気温は数値
+  feelsLike: number;  // 体感温度は数値
+  tempMax: number;  // 最高気温は数値
+  tempMin: number;  // 最低気温は数値
+  humidity: number;  // 湿度は数値
+  windSpeed: number;  // 風速は数値
+  description: string;  // 天気状態は文字列
+  icon: string;  // アイコンは文字列
+  hourlyList: HourlyForecast[];  // 時間ごとのリストはhourlyforecast
+  dailyList: DailyForecast[];  // 日ごとのリストはdailyforecast
 };
 
 // 緯度・経度でピンポイント指定
-const CITIES = [
-  { id: 'ibaraki', name: '大阪府 茨木市', lat: 34.8162, lon: 135.5684 },
-  { id: 'sakyo', name: '京都府 京都市左京区', lat: 35.0431, lon: 135.7876 },
+const CITIES = [  // constは定数　都市を定義
+  { id: 'ibaraki', name: '大阪府 茨木市', lat: 34.8162, lon: 135.5684 },  // 茨木市の緯度経度
+  { id: 'sakyo', name: '京都府 京都市左京区', lat: 35.0431, lon: 135.7876 },  // 京都市左京区の緯度経度
 ];
 
-const API_KEY = import.meta.env.VITE_API_KEY;
+const API_KEY = import.meta.env.VITE_API_KEY;  // APIkeyを.envの秘密ファイルから持ってきて定義
 
 export default function App() {
   const [weatherList, setWeatherList] = useState<WeatherData[]>([]);
@@ -167,9 +167,9 @@ export default function App() {
           {/* ヘッダー */}
           <header className="text-center mb-8">
             <h1 className="text-3xl font-extrabold text-white drop-shadow-md tracking-wide">
-              🌤 マイ天気ダッシュボード
+              🌤 自分だけのウェザーニュース🐶
             </h1>
-            <p className="text-white/90 text-sm mt-1 drop-shadow-sm">大阪府茨木市 & 京都府京都市左京区</p>
+            <p className="text-white/90 text-sm mt-1 drop-shadow-sm">自宅周辺 & 京大周辺</p>
           </header>
 
           {/* エラー表示 */}
@@ -194,7 +194,7 @@ export default function App() {
                 onClick={() => setSelectedWeather(null)}
                 className="mb-4 text-blue-600 font-bold hover:underline flex items-center gap-1 cursor-pointer"
               >
-                ← 地域選択に戻る
+                ← 戻る
               </button>
 
               {/* ① 現在の天気サマリー */}
