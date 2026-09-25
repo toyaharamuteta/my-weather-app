@@ -17,10 +17,10 @@ type CityForecast = {
   daily: DailyForecast[];
 };
 
-// 表示したい都市のリスト
+// ★ 緯度・経度でピンポイント指定に変更
 const CITIES = [
-  { name: '茨木市', query: 'Ibaraki,JP' },
-  { name: '京都市左京区', query: 'Sakyo-ku,JP' },
+  { name: '茨木市', lat: 34.8162, lon: 135.5684 },
+  { name: '京都市左京区', lat: 35.0431, lon: 135.7876 },
 ];
 
 const API_KEY = import.meta.env.VITE_API_KEY;
@@ -33,7 +33,7 @@ export default function App() {
   useEffect(() => {
     const fetchWeather = async () => {
       if (!API_KEY) {
-        setError('APIキーが設定されていません。Vercelの環境変数を確認してください。');
+        setError('APIキーが設定されていません。.env や Vercelの環境変数を確認してください。');
         setLoading(false);
         return;
       }
@@ -42,11 +42,11 @@ export default function App() {
       setError(null);
 
       try {
-        // 各都市の週間天気（5日間/3時間ごと）データを並列で取得
+        // 各都市の週間天気（5日間/3時間ごと）データを並列で取得（lat / lon 指定）
         const results = await Promise.all(
           CITIES.map(async (city) => {
             const response = await fetch(
-              `https://api.openweathermap.org/data/2.5/forecast?q=${city.query}&units=metric&lang=ja&appid=${API_KEY}`
+              `https://api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.lon}&units=metric&lang=ja&appid=${API_KEY}`
             );
 
             if (!response.ok) {
@@ -70,7 +70,6 @@ export default function App() {
 
             data.list.forEach((item: any) => {
               const dateObj = new Date(item.dt * 1000);
-              // 日付キー (例: "2026-09-24")
               const dateKey = dateObj.toISOString().split('T')[0];
 
               if (!dailyMap[dateKey]) {
@@ -86,7 +85,6 @@ export default function App() {
                 };
               }
 
-              // 気温を配列に記録
               dailyMap[dateKey].temps.push(item.main.temp);
 
               // 昼（12:00前後）の天気を優先的にアイコン・説明として採用
@@ -96,7 +94,7 @@ export default function App() {
               }
             });
 
-            // 日別データを配列化（最大5日分）して最高・最低気温を計算
+            // 日別データを配列化（最大5日分）
             const dailyList: DailyForecast[] = Object.values(dailyMap)
               .slice(0, 5)
               .map((day) => ({
@@ -192,12 +190,10 @@ export default function App() {
                       key={dayIdx}
                       className="flex items-center justify-between bg-white/60 p-3 rounded-2xl shadow-sm border border-white/50"
                     >
-                      {/* 日付 */}
                       <span className="font-semibold text-gray-700 w-24">
                         {day.date}
                       </span>
 
-                      {/* 天気アイコン ＆ 説明 */}
                       <div className="flex items-center gap-2 flex-1 justify-center">
                         <img
                           src={`https://openweathermap.org/img/wn/${day.icon}.png`}
@@ -209,7 +205,6 @@ export default function App() {
                         </span>
                       </div>
 
-                      {/* 最高 / 最低気温 */}
                       <div className="text-right w-24 font-bold text-sm">
                         <span className="text-red-500">{day.tempMax}°</span>
                         <span className="text-gray-400 mx-1.5">/</span>
